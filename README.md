@@ -332,15 +332,11 @@ wrangler dev --log-level debug
 
 ## Contributing
 
-This is an internship assignment submission. Original work only.
+Feedback and suggestions are welcome. For detailed guidelines on how to contribute, please refer to the [CONTRIBUTING.md](./CONTRIBUTING.md) file.
 
 ## License
 
-MIT License - see LICENSE file
-
-## Contact
-
-For questions about this submission, please contact via the application portal.
+MIT License - see the full text in the [LICENSE.md](./LICENSE.md) file.
 
 ---
 
