@@ -1,0 +1,65 @@
+name = "cf-ai-study-buddy"
+main = "src/index.ts"
+compatibility_date = "2024-10-01"
+workers_dev = true
+
+[observability]
+enabled = true
+
+# Workers AI binding
+[ai]
+binding = "AI"
+
+# Durable Objects
+[[durable_objects.bindings]]
+name = "STUDY_STATE"
+class_name = "StudyState"
+script_name = "cf-ai-study-buddy"
+
+[[migrations]]
+tag = "v1"
+new_classes = ["StudyState"]
+
+# Workflows binding
+[[workflows]]
+binding = "STUDY_WORKFLOW"
+name = "study-session-workflow"
+class_name = "StudySessionWorkflow"
+
+[[workflows]]
+binding = "QUIZ_WORKFLOW"
+name = "quiz-generation-workflow"
+class_name = "QuizGenerationWorkflow"
+
+# KV for caching
+[[kv_namespaces]]
+binding = "cf_ai_study_buddy_CACHE_dev"
+id = "a3382b847edb401db4842c3c4e362ea6"
+
+#[[kv_namespaces]]
+#binding = "cf_ai_study_buddy_CACHE_preview"
+#preview_id = "b2f481203434437a9434a7c67b5915e1"
+
+# Environment variables
+[vars]
+ENVIRONMENT = "development"
+MAX_SESSION_DURATION = "7200"
+MAX_QUIZ_QUESTIONS = "20"
+
+# Development environment
+[env.development]
+name = "cf-ai-study-buddy-dev"
+vars = { ENVIRONMENT = "development" }
+
+# Production environment
+[env.production]
+name = "cf-ai-study-buddy"
+vars = { ENVIRONMENT = "production" }
+
+[[env.production.kv_namespaces]]
+binding = "CACHE"
+id = "production-kv-namespace-id"
+
+# Build configuration
+[build]
+command = "npm run build"
