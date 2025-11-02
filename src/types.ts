@@ -61,6 +61,13 @@ export interface StudySessionParams {
 }
 
 // Quiz types
+export interface QuizAnswer {
+    questionId: string;
+    answer: string;
+    isCorrect?: boolean;
+    pointsEarned?: number;
+}
+
 export interface Quiz {
     id: string;
     topic: string;
@@ -84,9 +91,9 @@ export interface QuizResult {
     score: number;
     maxScore: number;
     percentage: number;
-    answers: Record<string, string>;
     completedAt: number;
     timeSpent: number;
+    answers: QuizAnswer[];
 }
 
 export interface QuizGenerationParams {

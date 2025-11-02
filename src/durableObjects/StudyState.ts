@@ -4,6 +4,7 @@ import {
     ChatHistory,
     ChatMessage,
     Quiz,
+    QuizAnswer,
     QuizResult,
     ProgressData,
     TopicProgress,
@@ -97,8 +98,8 @@ export class StudyState implements DurableObject {
 
     // Chat methods
     private async getChatHistory(request: Request): Promise<Response> {
-        const { sessionId } = await request.json();
-        const history = this.userState!.chatHistories[sessionId];
+        const body: { sessionId: string } = await request.json();
+        const history = this.userState!.chatHistories[body.sessionId];
 
         return new Response(JSON.stringify(history?.messages || []), {
             headers: { 'Content-Type': 'application/json' },
@@ -106,7 +107,8 @@ export class StudyState implements DurableObject {
     }
 
     private async saveChatMessage(request: Request): Promise<Response> {
-        const { sessionId, userMessage, aiResponse } = await request.json();
+        const body: { sessionId: string; userMessage: string; aiResponse: string } = await request.json();
+        const { sessionId, userMessage, aiResponse } = body;
 
         if (!this.userState!.chatHistories[sessionId]) {
             this.userState!.chatHistories[sessionId] = {
@@ -167,20 +169,19 @@ export class StudyState implements DurableObject {
         );
 
         const currentSession = activeSessions[activeSessions.length - 1] || null;
-
-        return new Response(JSON.stringify(currentSession), {
+        
+        return new Response(JSON.stringify({ session: currentSession }), {
             headers: { 'Content-Type': 'application/json' },
         });
     }
 
     private async completeSession(request: Request): Promise<Response> {
-        const { sessionId } = await request.json();
+        const { sessionId, answers }: { sessionId: string; answers: Record<string, string> } = await request.json();
         const session = this.userState!.sessions[sessionId];
 
         if (session) {
             session.status = 'completed';
             session.endTime = Date.now();
-
             const duration = (session.endTime - session.startTime) / 1000 / 60; // minutes
             this.userState!.progress.totalStudyTime += duration;
 
@@ -208,7 +209,7 @@ export class StudyState implements DurableObject {
     }
 
     private async submitQuiz(request: Request): Promise<Response> {
-        const { quizId, answers } = await request.json();
+        const { quizId, answers }: { quizId: string; answers: QuizAnswer[] } = await request.json();
         const quiz = this.userState!.quizzes[quizId];
 
         if (!quiz) {
@@ -221,8 +222,10 @@ export class StudyState implements DurableObject {
         let score = 0;
         const maxScore = quiz.questions.reduce((sum, q) => sum + q.points, 0);
 
+        // Find the answer for each question and check if it's correct
         quiz.questions.forEach(question => {
-            if (answers[question.id]?.toLowerCase() === question.correctAnswer.toLowerCase()) {
+            const answer = answers.find(a => a.questionId === question.id);
+            if (answer && answer.answer.toLowerCase() === question.correctAnswer.toLowerCase()) {
                 score += question.points;
             }
         });
