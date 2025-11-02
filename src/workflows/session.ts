@@ -28,9 +28,14 @@ export class StudySessionWorkflow extends WorkflowEntrypoint<StudySessionEnv, St
             const stub = this.env.STUDY_STATE.get(id);
 
             const response = await stub.fetch('http://internal/progress/topics');
-            const topics = await response.json();
+            const topics = await response.json() as Array<{
+                topic: string;
+                masteryLevel?: number;
+                timeSpent?: number;
+                sessionsCount?: number;
+            }>;
 
-            const topicProgress = topics.find((t: any) => t.topic === topic);
+            const topicProgress = topics.find(t => t.topic === topic);
 
             return {
                 masteryLevel: topicProgress?.masteryLevel || 0,
@@ -73,7 +78,7 @@ export class StudySessionWorkflow extends WorkflowEntrypoint<StudySessionEnv, St
                 method: 'POST',
                 body: JSON.stringify({ sessionId }),
             });
-            const messages = await historyResponse.json();
+            const { messages } = await historyResponse.json() as { messages: Array<{ role: string; content: string }> };
 
             // Use AI to generate summary
             const prompt = `Summarize this study session on ${topic}. 
@@ -92,7 +97,8 @@ Provide a brief summary of what was covered and recommendations for next steps.`
                     max_tokens: 300,
                 });
 
-                return aiResponse.response || 'Session completed successfully.';
+                // The response is a string, not an object with a content property
+                return aiResponse || 'Session completed successfully.';
             } catch (error) {
                 return `Completed ${duration}-minute study session on ${topic}.`;
             }
