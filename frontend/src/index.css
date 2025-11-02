@@ -1,0 +1,107 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Markdown styles */
+.prose {
+    max-width: none;
+}
+
+.prose p {
+    margin-bottom: 1em;
+}
+
+.prose code {
+    background-color: #f3f4f6;
+    padding: 0.2em 0.4em;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
+}
+
+.prose pre {
+    background-color: #1f2937;
+    color: #f9fafb;
+    padding: 1em;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    margin: 1em 0;
+}
+
+.prose pre code {
+    background-color: transparent;
+    padding: 0;
+    color: inherit;
+}
+
+.prose ul, .prose ol {
+    margin-left: 1.5em;
+    margin-bottom: 1em;
+}
+
+.prose li {
+    margin-bottom: 0.5em;
+}
+
+.prose h1, .prose h2, .prose h3, .prose h4 {
+    margin-top: 1.5em;
+    margin-bottom: 0.75em;
+    font-weight: 600;
+}
+
+.prose h1 {
+    font-size: 1.875em;
+}
+
+.prose h2 {
+    font-size: 1.5em;
+}
+
+.prose h3 {
+    font-size: 1.25em;
+}
+
+.prose blockquote {
+    border-left: 4px solid #e5e7eb;
+    padding-left: 1em;
+    margin: 1em 0;
+    font-style: italic;
+    color: #6b7280;
+}
