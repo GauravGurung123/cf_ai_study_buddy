@@ -1,0 +1,12 @@
+# Local development environment variables
+# Copy this file to .dev.vars and fill in your values
+
+# Environment
+ENVIRONMENT=development
+
+# Optional: AI Gateway ID (if using Cloudflare AI Gateway)
+# AI_GATEWAY_ID=your-gateway-id
+
+# Optional: Rate limiting settings
+# RATE_LIMIT_REQUESTS=100
+# RATE_LIMIT_WINDOW=60
