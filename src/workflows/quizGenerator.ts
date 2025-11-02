@@ -18,8 +18,8 @@ export class QuizGenerationWorkflow extends WorkflowEntrypoint<QuizGenEnv, QuizG
 
             // Get user's sessions on this topic
             const progressResponse = await stub.fetch('http://internal/progress/topics');
-            const topics = await progressResponse.json();
-            const topicProgress = topics.find((t: any) => t.topic === topic);
+            const topics: import('../types').TopicProgress[] = await progressResponse.json();
+            const topicProgress = topics.find(t => t.topic === topic);
 
             return {
                 masteryLevel: topicProgress?.masteryLevel || 0,

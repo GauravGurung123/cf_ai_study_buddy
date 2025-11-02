@@ -39,6 +39,11 @@ export interface ChatHistory {
     messages: ChatMessage[];
 }
 
+export interface ChatHistoryResponse {
+    success: boolean;
+    data: ChatHistory;
+}
+
 // Study session types
 export interface StudySession {
     id: string;
