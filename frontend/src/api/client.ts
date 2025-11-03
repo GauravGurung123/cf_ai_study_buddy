@@ -154,12 +154,11 @@ class APIClient {
     ): Promise<Quiz> {
         // Note: In production, you'd want to poll for workflow completion
         // For now, we'll simulate with a delay
-        const data = await this.request<{ workflowId: string }>('/api/quiz/generate', {
+        await this.request<{ workflowId: string }>('/api/quiz/generate', {
             method: 'POST',
             body: JSON.stringify({ topic, questionCount, difficulty, userId }),
         });
-
-        // Wait a bit for workflow to complete (simplified)
+// Wait a bit for workflow to complete (simplified)
         await new Promise(resolve => setTimeout(resolve, 3000));
 
         // Return mock data for now - in production, fetch from workflow result
