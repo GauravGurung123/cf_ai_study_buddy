@@ -1,5 +1,10 @@
 import { ChatMessage, AIResponse, QuizQuestion } from '../types';
 
+// Workers AI response type
+interface AiTextGenerationOutput {
+    response?: string;
+}
+
 export class AIService {
     private ai: Ai;
 
@@ -38,7 +43,7 @@ When explaining:
                 messages,
                 max_tokens: 1024,
                 temperature: 0.7,
-            });
+            }) as AiTextGenerationOutput;
 
             return response.response || 'I apologize, but I encountered an error. Please try again.';
         } catch (error) {
@@ -67,7 +72,7 @@ Keep it concise but comprehensive (300-500 words).`;
                 ],
                 max_tokens: 800,
                 temperature: 0.7,
-            });
+            }) as AiTextGenerationOutput;
 
             return response.response || '';
         } catch (error) {
@@ -117,7 +122,7 @@ Requirements:
                 ],
                 max_tokens: 2048,
                 temperature: 0.8,
-            });
+            }) as AiTextGenerationOutput;
 
             const content = response.response || '{}';
 
@@ -164,7 +169,7 @@ Be actionable and specific.`;
                 ],
                 max_tokens: 512,
                 temperature: 0.7,
-            });
+            }) as AiTextGenerationOutput;
 
             return response.response || 'Continue practicing and reviewing concepts regularly.';
         } catch (error) {
@@ -206,7 +211,7 @@ Keep it concise (150-200 words).`;
                 ],
                 max_tokens: 400,
                 temperature: 0.5,
-            });
+            }) as AiTextGenerationOutput;
 
             return response.response || 'Session completed successfully.';
         } catch (error) {

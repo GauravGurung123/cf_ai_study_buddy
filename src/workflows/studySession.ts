@@ -6,6 +6,11 @@ type StudySessionEnv = {
     AI: Ai;
 };
 
+// Workers AI response type
+interface AiTextGenerationOutput {
+    response?: string;
+}
+
 export class StudySessionWorkflow extends WorkflowEntrypoint<StudySessionEnv, StudySessionParams> {
     async run(event: WorkflowEvent<StudySessionParams>, step: WorkflowStep) {
         const { sessionId, topic, duration, difficulty, userId } = event.payload;
@@ -74,20 +79,19 @@ export class StudySessionWorkflow extends WorkflowEntrypoint<StudySessionEnv, St
                 body: JSON.stringify({ sessionId }),
             });
             const historyData = await historyResponse.json() as ChatHistoryResponse;
-            
+
             if (!historyData.success || !historyData.data) {
                 throw new Error('Failed to fetch chat history');
             }
-            
-            const { messages } = historyData.data;
 
+            const { messages } = historyData.data;
             // Use AI to generate summary
             const prompt = `Summarize this study session on ${topic}. 
-Session approach: ${learningPath.approach}
-Number of interactions: ${messages.length}
-Duration: ${duration} minutes
-
-Provide a brief summary of what was covered and recommendations for next steps.`;
+                Session approach: ${learningPath.approach}
+                Number of interactions: ${messages.length}
+                Duration: ${duration} minutes
+                
+                Provide a brief summary of what was covered and recommendations for next steps.`;
 
             try {
                 const aiResponse = await this.env.AI.run('@cf/meta/llama-3.3-70b-instruct-fp8-fast', {

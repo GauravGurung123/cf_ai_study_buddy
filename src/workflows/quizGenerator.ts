@@ -1,11 +1,16 @@
 import { WorkflowEntrypoint, WorkflowStep, WorkflowEvent } from 'cloudflare:workers';
-import { QuizGenerationParams, Quiz, QuizQuestion } from '../types';
+import { QuizGenerationParams, Quiz, QuizQuestion, TopicProgress } from '../types';
 
 type QuizGenEnv = {
     STUDY_STATE: DurableObjectNamespace;
     AI: Ai;
     CACHE: KVNamespace;
 };
+
+// Workers AI response type
+interface AiTextGenerationOutput {
+    response?: string;
+}
 
 export class QuizGenerationWorkflow extends WorkflowEntrypoint<QuizGenEnv, QuizGenerationParams> {
     async run(event: WorkflowEvent<QuizGenerationParams>, step: WorkflowStep) {
@@ -18,8 +23,8 @@ export class QuizGenerationWorkflow extends WorkflowEntrypoint<QuizGenEnv, QuizG
 
             // Get user's sessions on this topic
             const progressResponse = await stub.fetch('http://internal/progress/topics');
-            const topics: import('../types').TopicProgress[] = await progressResponse.json();
-            const topicProgress = topics.find(t => t.topic === topic);
+            const topics = await progressResponse.json() as TopicProgress[];
+            const topicProgress = topics.find((t) => t.topic === topic);
 
             return {
                 masteryLevel: topicProgress?.masteryLevel || 0,
@@ -40,7 +45,7 @@ Return as a simple comma-separated list.`;
                         { role: 'user', content: prompt },
                     ],
                     max_tokens: 200,
-                });
+                }) as AiTextGenerationOutput;
 
                 const conceptsText = response.response || '';
                 return conceptsText.split(',').map(c => c.trim()).filter(c => c.length > 0);
@@ -94,7 +99,7 @@ Requirements:
                     ],
                     max_tokens: 2500,
                     temperature: 0.8,
-                });
+                }) as AiTextGenerationOutput;
 
                 const content = response.response || '{}';
 
