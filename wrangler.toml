@@ -10,15 +10,16 @@ enabled = true
 [ai]
 binding = "AI"
 
-# Durable Objects
+# Durable Objects - Updated for free plan (SQLite-based)
 [[durable_objects.bindings]]
 name = "STUDY_STATE"
 class_name = "StudyState"
 script_name = "cf-ai-study-buddy"
 
+# IMPORTANT: Use new_sqlite_classes for free plan compatibility
 [[migrations]]
 tag = "v1"
-new_classes = ["StudyState"]
+new_sqlite_classes = ["StudyState"]
 
 # Workflows binding
 [[workflows]]
@@ -33,12 +34,8 @@ class_name = "QuizGenerationWorkflow"
 
 # KV for caching
 [[kv_namespaces]]
-binding = "cf_ai_study_buddy_CACHE_dev"
+binding = "CACHE"
 id = "a3382b847edb401db4842c3c4e362ea6"
-
-#[[kv_namespaces]]
-#binding = "cf_ai_study_buddy_CACHE_preview"
-#preview_id = "b2f481203434437a9434a7c67b5915e1"
 
 # Environment variables
 [vars]
@@ -51,6 +48,10 @@ MAX_QUIZ_QUESTIONS = "20"
 name = "cf-ai-study-buddy-dev"
 vars = { ENVIRONMENT = "development" }
 
+[[env.development.kv_namespaces]]
+binding = "CACHE"
+id = "a3382b847edb401db4842c3c4e362ea6"
+
 # Production environment
 [env.production]
 name = "cf-ai-study-buddy"
@@ -58,7 +59,7 @@ vars = { ENVIRONMENT = "production" }
 
 [[env.production.kv_namespaces]]
 binding = "CACHE"
-id = "production-kv-namespace-id"
+id = "a3382b847edb401db4842c3c4e362ea6"
 
 # Build configuration
 [build]

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Trophy, Clock, CheckCircle, XCircle, Loader2 } from 'lucide-react';
+import { Trophy, CheckCircle, XCircle, Loader2 } from 'lucide-react';
 import { apiClient } from '../api/client';
 
 interface Question {
@@ -311,7 +311,7 @@ export default function QuizMode({ userId }: QuizModeProps) {
                     {/* Question Review */}
                     <div className="space-y-4 mb-8">
                         <h3 className="text-xl font-bold text-gray-900 mb-4">Review</h3>
-                        {questions.map((q, index) => {
+                        {questions.map((q, _) => {
                             const userAnswer = result.answers[q.id];
                             const isCorrect = userAnswer?.toLowerCase() === q.correctAnswer.toLowerCase();
 
